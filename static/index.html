@@ -310,11 +310,19 @@
             // Add the application specific mouse listeners!
             //XXX: TODO Make these prettier!
             mouse.mousedowners.push(function (x, y, clicked, e) {
-                addEntityWithoutName({ x: x, y: y, colour: "blue" });
+                addEntityWithoutName({
+                    x: x,
+                    y: y,
+                    colour: "blue",
+                });
             });
 
             mouse.mouseuppers.push(function (x, y, clicked, e) {
-                addEntityWithoutName({ x: x, y: y, colour: "red" });
+                addEntityWithoutName({
+                    x: x,
+                    y: y,
+                    colour: "red",
+                });
             });
 
             mouse.mousedraggers.push(function (x, y, clicked, e) {
@@ -328,12 +336,13 @@
 
             function update() {
                 //XXX: TODO Get the world from the webservice using a XMLHTTPRequest
+                drawFrame();
                 sendJSONXMLHTTPRequest(
                     "http://" + host + "/world",
                     {},
                     updateWorld
                 );
-                drawFrame();
+                drawNextFrame();
             }
 
             function updateWorld(data) {
