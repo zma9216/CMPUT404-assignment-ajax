@@ -53,6 +53,7 @@
                 //XXX: POST to a URL
                 //XXX: set the mimetype and the accept headers!
                 // Remember to use application/json !
+                // Desire Kaleba - https://stackoverflow.com/a/61167168
                 xhr.open("POST", url);
                 xhr.setRequestHeader("Content-Type", "application/json");
                 xhr.setRequestHeader("Accept", "application/json");
@@ -62,23 +63,30 @@
             world = {};
 
             //XXX: TODO Make this prettier!
-            function drawCircle(context, entity) {
+            // Andrei Volgin - https://stackoverflow.com/a/25840319
+            function drawStar(context, entity) {
                 with (context) {
+                    var rot = (Math.PI / 2) * 3;
+                    var cx = entity["x"];
+                    var cy = entity["y"];
+                    var step = Math.PI / 5;
+
                     beginPath();
-                    lineWidth = 3;
-                    var x = entity["x"];
-                    var y = entity["y"];
-                    //moveTo(x,y);
+                    for (i = 0; i < 5; i++) {
+                        x = cx + Math.cos(rot) * entity["outerRadius"];
+                        y = cy + Math.sin(rot) * entity["outerRadius"];
+                        lineTo(x, y);
+                        rot += step;
+
+                        x = cx + Math.cos(rot) * entity["innerRadius"];
+                        y = cy + Math.sin(rot) * entity["innerRadius"];
+                        lineTo(x, y);
+                        rot += step;
+                    }
+                    closePath();
+                    lineWidth = entity["lineWidth"];
                     fillStyle = entity["colour"];
                     strokeStyle = fillStyle;
-                    arc(
-                        x,
-                        y,
-                        entity["radius"] ? entity["radius"] : 50,
-                        0,
-                        2.0 * Math.PI,
-                        false
-                    );
                     stroke();
                 }
             }
@@ -87,8 +95,14 @@
                 if (!entity["colour"]) {
                     entity["colour"] = "#FF0000";
                 }
-                if (!entity["radius"]) {
-                    entity["radius"] = 50;
+                if (!entity["lineWidth"]) {
+                    entity["lineWidth"] = "3";
+                }
+                if (!entity["outerRadius"]) {
+                    entity["outerRadius"] = 50;
+                }
+                if (!entity["innerRadius"]) {
+                    entity["innerRadius"] = 25;
                 }
                 return entity;
             }
@@ -106,7 +120,7 @@
                 clearFrame();
                 for (var key in world) {
                     var entity = world[key];
-                    drawCircle(context, prepEntity(entity));
+                    drawStar(context, prepEntity(entity));
                 }
             }
 
@@ -313,7 +327,8 @@
                 addEntityWithoutName({
                     x: x,
                     y: y,
-                    colour: "blue",
+                    colour: "#12a4d9",
+                    lineWidth: 5,
                 });
             });
 
@@ -321,7 +336,8 @@
                 addEntityWithoutName({
                     x: x,
                     y: y,
-                    colour: "red",
+                    colour: "#d9138a",
+                    lineWidth: 5,
                 });
             });
 
@@ -329,8 +345,9 @@
                 addEntityWithoutName({
                     x: x,
                     y: y,
-                    colour: "green",
-                    radius: 10,
+                    colour: "#e2d810",
+                    outerRadius: 30,
+                    innerRadius: 15,
                 });
             });
 
